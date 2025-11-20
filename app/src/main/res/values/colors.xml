@@ -1,5 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta da barbearia -->
+    <color name="primary">#0A3D62</color>      <!-- Azul escuro elegante -->
+    <color name="onPrimary">#FFFFFF</color>
+
+    <color name="secondary">#D62828</color>    <!-- Vermelho vibrante -->
+    <color name="onSecondary">#FFFFFF</color>
+
+    <color name="background">#F3F3F3</color>
+    <color name="onBackground">#1A1A1A</color>
+
+    <color name="surface">#FFFFFF</color>
+    <color name="onSurface">#1A1A1A</color>
+
+    <!-- tons neutros -->
+    <color name="grayLight">#E0E0E0</color>
+    <color name="grayMedium">#8A8A8A</color>
+    <color name="blackPremium">#000000</color>
+
 </resources>
