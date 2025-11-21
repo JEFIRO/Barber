@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.jefiro.barber.MainActivity;
 import com.example.jefiro.barber.R;
+import com.example.jefiro.barber.home.HomePage;
 import com.example.jefiro.barber.model.Cliente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -74,7 +75,7 @@ public class CadastroCliente extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             db.collection("Clientes")
-                                    .document(user.getUid()) // usa UID do Auth como ID
+                                    .document(user.getUid())
                                     .set(cliente)
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(CadastroCliente.this, "Cliente salvo e autenticado!", Toast.LENGTH_SHORT).show();
@@ -94,9 +95,7 @@ public class CadastroCliente extends AppCompatActivity {
                 });
     }
 
-    public void signOut() {
-        FirebaseAuth.getInstance().signOut();
-    }
+
 
     public void onStart() {
         super.onStart();
@@ -144,7 +143,7 @@ public class CadastroCliente extends AppCompatActivity {
             Toast.makeText(this, "Bem-vindo, " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
             finish();
         } else {

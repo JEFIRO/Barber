@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.jefiro.barber.MainActivity;
 import com.example.jefiro.barber.R;
+import com.example.jefiro.barber.home.HomePage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,7 +35,7 @@ public class SelectOptionAuth extends AppCompatActivity {
 
         if (user != null){
             Toast.makeText(this, "Bem-vindo de volta, " + user.getEmail(), Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, HomePage.class));
             finish();
         }
     }

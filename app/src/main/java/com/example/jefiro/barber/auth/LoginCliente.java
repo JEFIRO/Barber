@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.jefiro.barber.MainActivity;
 import com.example.jefiro.barber.R;
+import com.example.jefiro.barber.home.HomePage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -61,7 +62,7 @@ public class LoginCliente extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(LoginCliente.this, "Ben-vindo" + user.getEmail(), Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(LoginCliente.this, MainActivity.class);
+                        Intent intent = new Intent(LoginCliente.this, HomePage.class);
                         startActivity(intent);
                         finish();
                     } else {

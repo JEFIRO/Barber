@@ -59,7 +59,7 @@
         android:backgroundTint="@color/primary"
         android:onClick="login"
         android:paddingVertical="14dp"
-        android:text="Cadastra-se"
+        android:text="Login"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
