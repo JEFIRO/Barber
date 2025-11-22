@@ -16,9 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Barbershop">
         <activity
-            android:name=".auth.Profile"
-            android:exported="false" />
-        <activity
             android:name=".home.HomePage"
             android:exported="false" />
         <activity

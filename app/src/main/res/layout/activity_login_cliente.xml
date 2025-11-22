@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
@@ -30,6 +31,7 @@
         android:background="@drawable/input_background"
         android:gravity="center"
         android:hint="Digite seu email"
+        android:inputType="textEmailAddress"
         android:padding="14dp"
         android:textColor="@color/blackPremium"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,11 +47,24 @@
         android:background="@drawable/input_background"
         android:gravity="center"
         android:hint="Digite seu senha"
+        android:inputType="textPassword"
         android:padding="14dp"
         android:textColor="@color/blackPremium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputEmail" />
+
+    <CheckBox
+        android:id="@+id/checkExibirSenha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exibir senha"
+        android:onClick="exibirSenha"
+        app:layout_constraintTop_toBottomOf="@id/inputSenha"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingTop="8dp"
+        />
+
 
     <Button
         android:id="@+id/btnCadastrar"
@@ -63,8 +78,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputSenha" />
-
+        app:layout_constraintTop_toBottomOf="@id/checkExibirSenha" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

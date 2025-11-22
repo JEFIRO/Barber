@@ -69,7 +69,8 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/input_background"
         android:hint="Telefone"
-        android:inputType="text|phone"
+        android:inputType="phone"
+
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,6 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:onClick="escolherFoto"
         android:padding="14dp"
         android:text="Selecionar Foto"
         app:layout_constraintTop_toBottomOf="@id/inputTelefone"
@@ -87,23 +89,12 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_marginTop="16dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/btnSelecionarFoto"
         tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/infoView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/input_background"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
 
     <Button
         android:id="@+id/btnCadastrar"
@@ -111,13 +102,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/primary"
+        android:onClick="salvarCliente"
         android:paddingVertical="14dp"
         android:text="Cadastrar"
-        android:onClick="salvarCliente"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/infoView" />
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+    <Button
+        android:id="@+id/btnCadastrarGoogle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/primary"
+        android:onClick="salvarCliente"
+        android:paddingVertical="14dp"
+        android:text="Continuar com o Google"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnCadastrar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

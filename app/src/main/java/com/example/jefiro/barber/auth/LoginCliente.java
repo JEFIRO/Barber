@@ -2,8 +2,11 @@ package com.example.jefiro.barber.auth;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginCliente extends AppCompatActivity {
     private EditText email;
+    private CheckBox exibirSenha;
     private EditText senha;
     private FirebaseAuth mAuth;
 
@@ -37,6 +41,7 @@ public class LoginCliente extends AppCompatActivity {
 
         email = findViewById(R.id.inputEmail);
         senha = findViewById(R.id.inputSenha);
+        exibirSenha = findViewById(R.id.checkExibirSenha);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,6 +76,16 @@ public class LoginCliente extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    public void exibirSenha(View v) {
+        if (exibirSenha.isChecked()) {
+            senha.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            senha.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+
+        senha.setSelection(senha.getText().length());
     }
 
 }
