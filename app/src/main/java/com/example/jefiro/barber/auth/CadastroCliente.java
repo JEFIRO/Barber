@@ -59,9 +59,7 @@ public class CadastroCliente extends AppCompatActivity {
     private final String SUPABASE_URL = "https://iuzrpmyfklrvfpndmwbk.supabase.co";
     private final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1enJwbXlma2xydmZwbmRtd2JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MzMyNzgsImV4cCI6MjA3OTQwOTI3OH0.EiSfjlbSL881vznX193OCrG9ouI_2BdaBslYh2CM9GY";
     private final String BUCKET_NAME = "ClientesProfileImage";
-
     private String urlImage;
-
     private Uri uri;
     private TextView infoView;
     private FirebaseFirestore db;
@@ -77,7 +75,15 @@ public class CadastroCliente extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cadastro_cliente);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.CadastroCliente), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            selecionarImagem = registerForActivityResult(
+                    new ActivityResultContracts.GetContent(),
+                    uri -> {
+                        if (uri != null) {
+                            this.uri = uri;
+                            imageView.setImageURI(uri);
+                        }
+                    }
+            );Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
@@ -91,15 +97,7 @@ public class CadastroCliente extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        selecionarImagem = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                uri -> {
-                    if (uri != null) {
-                        this.uri = uri;
-                        imageView.setImageURI(uri);
-                    }
-                }
-        );
+
 
     }
 
@@ -220,8 +218,8 @@ public class CadastroCliente extends AppCompatActivity {
             Log.d("SUPABASE", "Bytes da imagem lidos: " + imageBytes.length);
 
 
-            String url = "https://iuzrpmyfklrvfpndmwbk.supabase.co/storage/v1/object/ClientesProfileImage/"
-                    + System.currentTimeMillis() + ".jpg";
+            String url = SUPABASE_URL + "/storage/v1/object/"
+                    + BUCKET_NAME + System.currentTimeMillis() + ".jpg";
 
             Log.d("SUPABASE", "URL destino: " + url);
 

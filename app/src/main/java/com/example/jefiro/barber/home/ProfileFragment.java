@@ -30,7 +30,6 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseUser cliente;
 
-
     private ShapeableImageView img;
     private EditText nomeInput;
     private EditText emailInput;
@@ -72,7 +71,6 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
     private void buscarUser() {
         if (cliente == null) return;
 
@@ -111,7 +109,8 @@ public class ProfileFragment extends Fragment {
     private void setarFoto(String fotoUrl) {
 
         if (fotoUrl == null || fotoUrl.isEmpty()) {
-            fotoUrl = "https://media.istockphoto.com/id/1495088043/pt/vetorial/user-profile-icon-avatar-ou-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=S7d8ImMSfoLBMCaEJOffTVua003OAl2xUnzOsuKIwek=";
+            fotoUrl = "https://media.istockphoto.com/id/1495088043/pt/vetorial/user-profile-icon-ava"
+                    + "tar-ou-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=S7d8ImMSfoLBMCaEJOffTVua003OAl2xUnzOsuKIwek=";
         }
 
 
@@ -138,6 +137,7 @@ public class ProfileFragment extends Fragment {
             getActivity().finish();
         }
     }
+
     public void atualizar(View v) {
         if (cliente == null || getContext() == null) return;
 
