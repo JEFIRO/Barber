@@ -1,6 +1,5 @@
 <resources>
 
-    <!-- Botão padrão da barbearia -->
     <style name="BarberButton">
         <item name="android:backgroundTint">@color/secondary</item>
         <item name="android:textColor">@color/onSecondary</item>
@@ -8,20 +7,25 @@
         <item name="cornerRadius">12dp</item>
     </style>
 
-    <!-- Texto padrão -->
     <style name="BarberText">
         <item name="android:textColor">@color/onSurface</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="ShapeAppearance.Circle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
 
-    <!-- Campo de texto -->
     <style name="BarberEditText">
         <item name="android:textColor">@color/onSurface</item>
         <item name="android:backgroundTint">@color/primary</item>
     </style>
+
+    <style name="CircleImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 
 </resources>
