@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class tela_agendamento extends AppCompatActivity {
 
     private Spinner spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +34,7 @@ public class tela_agendamento extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(tela_agendamento.this, "Item selecionado " + item , Toast.LENGTH_SHORT).show();
+                Toast.makeText(tela_agendamento.this, "Item selecionado " + item, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -51,6 +52,9 @@ public class tela_agendamento extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spinner.setAdapter(adapter);
+    }
+
+    private void getTest() {
     }
 
 }
