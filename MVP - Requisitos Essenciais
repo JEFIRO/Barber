@@ -1,0 +1,261 @@
+# MVP - Plataforma de Barbearias
+## Entrega em 20 dias - Apenas Essencial
+
+---
+
+# 📱 APP DO CLIENTE - MVP
+
+## 1. AUTENTICAÇÃO (Simplificada)
+
+### Requisitos Funcionais
+- **RF-C01**: Cadastro com nome, telefone e senha
+- **RF-C02**: Login com telefone e senha
+- **RF-C03**: Editar nome e foto de perfil
+
+### Regras de Negócio
+- **RN-C01**: Telefone único no sistema
+- **RN-C02**: Senha mínima de 6 caracteres
+
+---
+
+## 2. BUSCA DE BARBEARIAS
+
+### Requisitos Funcionais
+- **RF-C04**: Listar todas as barbearias ativas
+- **RF-C05**: Buscar barbearia por nome
+- **RF-C06**: Ver detalhes da barbearia (nome, endereço, foto, serviços)
+
+### Regras de Negócio
+- **RN-C03**: Apenas barbearias aprovadas aparecem
+- **RN-C04**: Ordenar por nome
+
+---
+
+## 3. AGENDAMENTO
+
+### Requisitos Funcionais
+- **RF-C07**: Selecionar barbearia
+- **RF-C08**: Escolher serviço
+- **RF-C09**: Escolher barbeiro
+- **RF-C10**: Selecionar data e horário disponível
+- **RF-C11**: Confirmar agendamento
+- **RF-C12**: Ver meus agendamentos futuros
+- **RF-C13**: Cancelar agendamento
+
+### Regras de Negócio
+- **RN-C05**: Antecedência mínima de 30 minutos
+- **RN-C06**: Cancelar até 2 horas antes
+- **RN-C07**: Máximo 3 agendamentos futuros por cliente
+- **RN-C08**: Não pode agendar horário já ocupado
+
+---
+
+## 4. AVALIAÇÃO (Simplificada)
+
+### Requisitos Funcionais
+- **RF-C14**: Avaliar com 1-5 estrelas após serviço
+- **RF-C15**: Escrever comentário (opcional)
+
+### Regras de Negócio
+- **RN-C09**: Uma avaliação por agendamento
+- **RN-C10**: Avaliar até 48h após serviço
+
+---
+
+# 💼 APP DO BARBEIRO - MVP
+
+## 5. AUTENTICAÇÃO
+
+### Requisitos Funcionais
+- **RF-B01**: Cadastro da barbearia (nome, telefone, endereço)
+- **RF-B02**: Login com telefone e senha
+- **RF-B03**: Aguardar aprovação da plataforma
+
+### Regras de Negócio
+- **RN-B01**: Telefone único no sistema
+- **RN-B02**: Aprovação manual em até 24h
+
+---
+
+## 6. PERFIL DA BARBEARIA
+
+### Requisitos Funcionais
+- **RF-B04**: Adicionar 1 foto da barbearia
+- **RF-B05**: Definir horário de funcionamento (seg-dom)
+- **RF-B06**: Editar endereço
+
+### Regras de Negócio
+- **RN-B03**: Foto obrigatória
+- **RN-B04**: Horário obrigatório para todos os dias
+
+---
+
+## 7. SERVIÇOS
+
+### Requisitos Funcionais
+- **RF-B07**: Cadastrar serviço (nome, duração, preço)
+- **RF-B08**: Editar serviço
+- **RF-B09**: Ativar/desativar serviço
+
+### Regras de Negócio
+- **RN-B05**: Mínimo 1 serviço cadastrado
+- **RN-B06**: Duração entre 15 e 120 minutos
+
+---
+
+## 8. BARBEIROS
+
+### Requisitos Funcionais
+- **RF-B10**: Cadastrar barbeiro (nome, foto)
+- **RF-B11**: Definir dias de trabalho
+- **RF-B12**: Definir horário de entrada e saída
+- **RF-B13**: Vincular serviços ao barbeiro
+
+### Regras de Negócio
+- **RN-B07**: Mínimo 1 barbeiro cadastrado
+- **RN-B08**: Barbeiro deve ter pelo menos 1 serviço
+
+---
+
+## 9. AGENDA
+
+### Requisitos Funcionais
+- **RF-B14**: Ver agenda do dia (todos os barbeiros)
+- **RF-B15**: Ver detalhes do agendamento (cliente, serviço, horário)
+- **RF-B16**: Confirmar agendamento
+- **RF-B17**: Cancelar agendamento
+- **RF-B18**: Criar agendamento manual
+- **RF-B19**: Ver agendamentos futuros (7 dias)
+
+### Regras de Negócio
+- **RN-B09**: Não pode sobrepor horários
+- **RN-B10**: Agendamentos confirmados automaticamente após 2h
+
+---
+
+## 10. DASHBOARD (Básico)
+
+### Requisitos Funcionais
+- **RF-B20**: Ver total de agendamentos do dia
+- **RF-B21**: Ver próximos agendamentos
+
+### Regras de Negócio
+- **RN-B11**: Atualizar a cada 5 minutos
+
+---
+
+# 🔧 REQUISITOS TÉCNICOS - MVP
+
+## Tecnologias Sugeridas
+
+### Backend
+- **Node.js + Express** (API REST)
+- **PostgreSQL** (Banco de dados)
+- **JWT** (Autenticação)
+
+### Frontend Cliente
+- **React Native** (iOS + Android)
+- **Expo** (acelera desenvolvimento)
+
+### Frontend Barbeiro
+- **React Web** (responsivo para mobile/tablet)
+
+### Infraestrutura
+- **Heroku ou Railway** (deploy rápido)
+- **Cloudinary** (imagens - plano free)
+- **Firebase** (notificações push - opcional para MVP)
+
+---
+
+## Banco de Dados Simplificado
+
+### Tabelas Essenciais
+1. **usuarios** (clientes)
+2. **barbearias**
+3. **barbeiros**
+4. **servicos**
+5. **agendamentos**
+6. **avaliacoes**
+
+---
+
+# 📋 O QUE FICA DE FORA DO MVP
+
+❌ Recuperação de senha  
+❌ Localização/GPS  
+❌ Filtros avançados  
+❌ Favoritos  
+❌ Notificações push  
+❌ SMS  
+❌ Histórico completo  
+❌ Relatórios detalhados  
+❌ Múltiplos usuários por barbearia  
+❌ Sistema de pagamento  
+❌ Chat  
+❌ Promoções  
+❌ Programa de fidelidade  
+❌ Agendamento recorrente  
+❌ LGPD completo (apenas termos básicos)
+
+---
+
+# ⏱️ CRONOGRAMA SUGERIDO (20 DIAS)
+
+## Semana 1 (Dias 1-7)
+- **Dia 1-2**: Setup do projeto + Banco de dados
+- **Dia 3-4**: Backend - Autenticação + CRUD básico
+- **Dia 5-7**: Backend - Lógica de agendamentos
+
+## Semana 2 (Dias 8-14)
+- **Dia 8-10**: App Cliente - Telas principais
+- **Dia 11-14**: App Cliente - Fluxo de agendamento
+
+## Semana 3 (Dias 15-20)
+- **Dia 15-17**: App Barbeiro - Dashboard + Agenda
+- **Dia 18-19**: Testes + Ajustes finais
+- **Dia 20**: Deploy + Entrega
+
+---
+
+# 🎯 ESCOPO FINAL DO MVP
+
+## App Cliente
+✅ Cadastro/Login  
+✅ Listar barbearias  
+✅ Ver detalhes  
+✅ Agendar horário  
+✅ Ver meus agendamentos  
+✅ Cancelar  
+✅ Avaliar  
+
+## App Barbeiro
+✅ Cadastro/Login  
+✅ Perfil da barbearia  
+✅ Cadastrar serviços  
+✅ Cadastrar barbeiros  
+✅ Ver agenda  
+✅ Gerenciar agendamentos  
+✅ Dashboard simples  
+
+## Total
+- **21 Requisitos Funcionais** no App Cliente
+- **21 Requisitos Funcionais** no App Barbeiro
+- **42 RF no total** (vs 204 da versão completa)
+- **Redução de 80%** mantendo funcionalidade core
+
+---
+
+# 💡 PRÓXIMOS PASSOS
+
+1. **Aprovar este escopo reduzido**
+2. **Modelar banco de dados (simples)**
+3. **Criar wireframes básicos**
+4. **Começar desenvolvimento**
+
+**Este MVP é viável em 20 dias com 1-2 devs full-stack dedicados.**
+
+---
+
+**Versão**: MVP 1.0  
+**Prazo**: 20 dias  
+**Status**: Aguardando aprovação
