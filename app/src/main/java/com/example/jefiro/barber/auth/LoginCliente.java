@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginCliente extends AppCompatActivity {
     private EditText email;
-    private CheckBox exibirSenha;
     private EditText senha;
     private FirebaseAuth mAuth;
 
@@ -39,9 +38,8 @@ public class LoginCliente extends AppCompatActivity {
             return insets;
         });
 
-        email = findViewById(R.id.inputEmail);
-        senha = findViewById(R.id.inputSenha);
-        exibirSenha = findViewById(R.id.checkExibirSenha);
+        email = findViewById(R.id.editEmail);
+        senha = findViewById(R.id.editSenha);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,14 +48,8 @@ public class LoginCliente extends AppCompatActivity {
     public void login(View v) {
         String emailTxt = email.getText().toString();
         String senhaTxt = senha.getText().toString();
-
-        if (emailTxt.isEmpty()) {
-            email.setHint("email não pode ser vazio");
-            email.setHintTextColor(Color.RED);
-        }
-        if (senhaTxt.isEmpty()) {
-            senha.setHintTextColor(Color.RED);
-            senha.setHint("Senha não pode ser vazio");
+        if (emailTxt.isEmpty() || senhaTxt.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
         }
         buscarCliente(emailTxt.trim(), senhaTxt.trim());
     }
@@ -78,14 +70,8 @@ public class LoginCliente extends AppCompatActivity {
         );
     }
 
-    public void exibirSenha(View v) {
-        if (exibirSenha.isChecked()) {
-            senha.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-        } else {
-            senha.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }
-
-        senha.setSelection(senha.getText().length());
+    public void chamarTelaCadastro(View v) {
+        startActivity(new Intent(getApplicationContext(), CadastroCliente.class));
     }
 
 }
