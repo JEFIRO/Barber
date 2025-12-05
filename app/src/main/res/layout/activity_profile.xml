@@ -1,0 +1,103 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/textHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Perfil do Usuário"
+        android:textColor="@color/blackPremium"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Avatar -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@id/textHome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <!-- Nome -->
+    <EditText
+        android:id="@+id/inputNome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Seu nome"
+        android:textColor="@color/blackPremium"
+        android:textColorHint="@color/blackPremium"
+        app:layout_constraintTop_toBottomOf="@id/imgProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/inputEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Seu Email"
+        android:textColor="@color/blackPremium"
+        android:textColorHint="@color/blackPremium"
+        app:layout_constraintTop_toBottomOf="@id/inputNome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Telefone -->
+    <EditText
+        android:id="@+id/inputTelefone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Seu Telefone"
+        android:textColor="@color/blackPremium"
+        android:textColorHint="@color/blackPremium"
+        app:layout_constraintTop_toBottomOf="@id/inputEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Botão Atualizar -->
+    <Button
+        android:id="@+id/bntAtualizar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Atualizar"
+        android:textColor="@color/blackPremium"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/inputTelefone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:onClick="atualizar"/>
+
+    <Button
+        android:id="@+id/bntSair"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Sair"
+        android:textColor="@color/blackPremium"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/bntAtualizar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
