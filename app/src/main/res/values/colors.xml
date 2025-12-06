@@ -1,9 +1,11 @@
 <resources>
 
-    <color name="primary">#0A3D62</color>      <!-- Azul escuro elegante -->
+    <color name="primary">#0A3D62</color>
     <color name="onPrimary">#FFFFFF</color>
 
-    <color name="secondary">#D62828</color>    <!-- Vermelho vibrante -->
+    <color name="verde">#4CAF50</color>
+
+    <color name="secondary">#D62828</color>
     <color name="onSecondary">#FFFFFF</color>
 
     <color name="background">#F3F3F3</color>

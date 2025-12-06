@@ -15,20 +15,9 @@
             android:id="@+id/myToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:title="Barber Shop"
             app:titleTextColor="@android:color/white">
-
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/searchBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:layout_gravity="center_vertical"
-                android:hint="Pesquisar..."
-                app:navigationIcon="@drawable/ic_search"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/profileImage"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileImage"
@@ -49,11 +38,11 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/containerServicos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
+            android:layout_marginTop="24dp"
+            android:orientation="vertical" />
 
     </androidx.core.widget.NestedScrollView>
 

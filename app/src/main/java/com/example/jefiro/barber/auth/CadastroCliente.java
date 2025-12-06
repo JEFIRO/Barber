@@ -61,20 +61,22 @@ public class CadastroCliente extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cadastro_cliente);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.CadastroCliente), (v, insets) -> {
-            selecionarImagem = registerForActivityResult(
-                    new ActivityResultContracts.GetContent(),
-                    uri -> {
-                        if (uri != null) {
-                            this.uri = uri;
-                            imageView.setImageURI(uri);
-                        }
+        selecionarImagem = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        this.uri = uri;
+                        imageView.setImageURI(uri);
                     }
-            );
+                }
+        );
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.CadastroCliente), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
 
         nomeCliente = findViewById(R.id.edtClienteNome);
         emailCliente = findViewById(R.id.edtClienteEmail);
