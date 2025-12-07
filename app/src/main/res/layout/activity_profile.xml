@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
-
-    <!-- Título -->
     <TextView
         android:id="@+id/textHome"
         android:layout_width="0dp"
@@ -19,8 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Avatar -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgProfile"
         android:layout_width="120dp"
@@ -31,8 +27,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
-
-    <!-- Nome -->
     <EditText
         android:id="@+id/inputNome"
         android:layout_width="0dp"
@@ -44,8 +38,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
-
-    <!-- Email -->
     <EditText
         android:id="@+id/inputEmail"
         android:layout_width="0dp"
@@ -57,8 +49,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
-
-    <!-- Telefone -->
     <EditText
         android:id="@+id/inputTelefone"
         android:layout_width="0dp"
@@ -70,8 +60,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
-
-    <!-- Botão Atualizar -->
     <Button
         android:id="@+id/bntAtualizar"
         android:layout_width="0dp"

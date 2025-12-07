@@ -1,5 +1,7 @@
 package com.example.jefiro.barber.home;
 
+import static com.example.jefiro.barber.service.DistanciaCalc.getDistance;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,9 +27,10 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.jefiro.barber.R;
 import com.example.jefiro.barber.barbearia.Barbearia;
+import com.example.jefiro.barber.barbearia.BarbeariaComDistancia;
 import com.example.jefiro.barber.model.Cliente;
 import com.example.jefiro.barber.repository.FirestoreRepository;
-import com.example.jefiro.barber.service.App;
+import com.example.jefiro.barber.service.OnDistanceCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -37,16 +40,22 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class HomeFragment extends Fragment {
+
     private ShapeableImageView profileImage;
-    private FirestoreRepository<Cliente> db;
+    private FirestoreRepository<Cliente> dbCliente;
     private FirestoreRepository<Barbearia> dbBarbearia;
+    private FirebaseAuth mAuth;
     private LinearLayout containerBarbearias;
-    private TextView tvStatus;
+    private Double usuarioLat, usuarioLon;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -59,31 +68,29 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         profileImage = view.findViewById(R.id.profileImage);
-
         containerBarbearias = view.findViewById(R.id.containerServicos);
 
+        mAuth = FirebaseAuth.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
-        db = new FirestoreRepository<Cliente>();
+        dbCliente = new FirestoreRepository<>();
+        dbBarbearia = new FirestoreRepository<>();
+
         setImgProfile();
         getLastLocation();
         return view;
     }
-
     private void getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(
-                    new String[]{
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    },
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     1001
             );
+            return;
         }
+
         if (!isGPSEnabled()) {
             showGPSDisabledAlert();
             return;
@@ -91,15 +98,14 @@ public class HomeFragment extends Fragment {
 
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
-                double latitude = location.getLatitude();
-                Log.d("MAPS", String.valueOf(latitude));
+                usuarioLat = location.getLatitude();
+                usuarioLon = location.getLongitude();
+                Log.d("MAPS", "Lat: " + usuarioLat + " Lon: " + usuarioLon);
 
-                double longitude = location.getLongitude();
-                Log.d("MAPS", String.valueOf(longitude));
+                carregarBarbearias(usuarioLat, usuarioLon, null); // Carrega todas as barbearias
             }
         });
     }
-
 
     private boolean isGPSEnabled() {
         LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
@@ -112,86 +118,48 @@ public class HomeFragment extends Fragment {
                 .setMessage("Para continuar, ative o GPS do dispositivo.")
                 .setCancelable(false)
                 .setPositiveButton("Ativar", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
-
     private void setImgProfile() {
-        String uid = App.getmAuth().getCurrentUser().getUid();
-        if (!uid.isEmpty()) {
-            db.getById("Clientes", uid, task -> {
-                if (task.isSuccessful()) {
+        String uid = mAuth.getUid();
+        if (uid == null || uid.isEmpty()) return;
 
-                    String fotoUrl = task.getResult().getString("fotoUrl");
-
-                    if (fotoUrl != null && !fotoUrl.isEmpty()) {
-                        Glide.with(this)
-                                .load(fotoUrl)
-                                .circleCrop()
-                                .into(profileImage);
-                    }
-                }
-            });
-        }
-    }
-
-    private void construirLayout(String id) {
-        containerBarbearias.removeAllViews();
-        dbBarbearia.getAll("Barbearia", task -> {
-
+        dbCliente.getById("Clientes", uid, task -> {
             if (task.isSuccessful()) {
-
-                for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                    View v = getLayoutInflater().inflate(R.layout.card_barbearia, containerBarbearias, false);
-
-                    ImageView imgBarbearia = v.findViewById(R.id.imgBarbearia);
-                    var nomeBarbearia = v.findViewById(R.id.tvNomeBarbearia);
-                    var tvEndereco = v.findViewById(R.id.tvEndereco);
-                    tvStatus = v.findViewById(R.id.tvStatus);
-                    var tvDistancia = v.findViewById(R.id.tvDistancia);
-
-                    setStatus(doc.getId());
-
+                String fotoUrl = task.getResult().getString("fotoUrl");
+                if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                    Glide.with(this).load(fotoUrl).circleCrop().into(profileImage);
                 }
-
             }
         });
     }
 
-    private void setStatus(String id) {
+    private void setStatus(String id, TextView statusView) {
         dbBarbearia.getSubDocument("Barbearias", id, "Horarios_Funcionamento", task -> {
-
             List<DocumentSnapshot> docs = task.getResult().getDocuments();
-            if (docs.isEmpty()) return;
 
-            String diaAtual = LocalDate.now()
-                    .getDayOfWeek()
-                    .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
+            if (docs.isEmpty()) {
+                statusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_fechado));
+                statusView.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
+                statusView.setText("Fechado");
+                return;
+            }
 
+            String diaAtual = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
             LocalTime agora = LocalTime.now();
-
             boolean aberto = false;
 
             for (DocumentSnapshot doc : docs) {
-
                 String dia = doc.getString("diaSemana");
-
                 if (!dia.equalsIgnoreCase(diaAtual)) continue;
 
-                List<Map<String, Object>> periods =
-                        (List<Map<String, Object>>) doc.get("periods");
-
+                List<Map<String, Object>> periods = (List<Map<String, Object>>) doc.get("periods");
                 for (Map<String, Object> p : periods) {
-
-                    String open = (String) p.get("open");
-                    String close = (String) p.get("close");
-
-                    LocalTime inicio = LocalTime.parse(open);
-                    LocalTime fim = LocalTime.parse(close);
-
+                    LocalTime inicio = LocalTime.parse((String) p.get("open"));
+                    LocalTime fim = LocalTime.parse((String) p.get("close"));
                     if (agora.isAfter(inicio) && agora.isBefore(fim)) {
                         aberto = true;
                         break;
@@ -200,17 +168,116 @@ public class HomeFragment extends Fragment {
             }
 
             if (aberto) {
-                tvStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_aberto));
-                tvStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
-                tvStatus.setText("Aberto");
+                statusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_aberto));
+                statusView.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
+                statusView.setText("Aberto");
             } else {
-                tvStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_fechado));
-                tvStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
-                tvStatus.setText("Fechado");
+                statusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_fechado));
+                statusView.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
+                statusView.setText("Fechado");
+            }
+        });
+    }
+
+    private void distance(double lat1, double lon1, double lat2, double lon2, OnDistanceCallback callback) {
+        getDistance(lat1, lon1, lat2, lon2, callback);
+    }
+
+    private void carregarBarbearias(double usuarioLat, double usuarioLon, String pesquisaNome) {
+        dbBarbearia.getAll("Barbearias", task -> {
+            if (!task.isSuccessful()) return;
+
+            List<DocumentSnapshot> docs = task.getResult().getDocuments();
+            List<BarbeariaComDistancia> lista = new ArrayList<>();
+            CountDownLatch latch = new CountDownLatch(docs.size());
+
+            for (DocumentSnapshot doc : docs) {
+                if (pesquisaNome != null && !pesquisaNome.isEmpty() &&
+                        !doc.getString("nome").toLowerCase().contains(pesquisaNome.toLowerCase())) {
+                    latch.countDown();
+                    continue;
+                }
+
+                dbBarbearia.getSubDocument("Barbearias", doc.getId(), "Enderecos", task1 -> {
+                    if (!task1.isSuccessful() || task1.getResult().isEmpty()) {
+                        latch.countDown();
+                        return;
+                    }
+
+                    DocumentSnapshot enderecoDoc = task1.getResult().getDocuments().get(0);
+
+                    Double lat = enderecoDoc.getDouble("lat");
+                    Double lon = enderecoDoc.getDouble("log");
+
+                    if (lat == null || lon == null) {
+                        latch.countDown();
+                        return;
+                    }
+
+                    distance(usuarioLat, usuarioLon, lat, lon, new OnDistanceCallback() {
+                        @Override
+                        public void onSucefull(double distanceKm) {
+                            lista.add(new BarbeariaComDistancia(doc, distanceKm));
+                            latch.countDown();
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            latch.countDown();
+                        }
+                    });
+                });
             }
 
+            new Thread(() -> {
+                try {
+                    latch.await();
+                    ordenarEExibir(lista);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         });
     }
 
 
+    private void ordenarEExibir(List<BarbeariaComDistancia> lista) {
+        Collections.sort(lista, Comparator.comparingDouble(BarbeariaComDistancia::getDistanciaMetros));
+
+        getActivity().runOnUiThread(() -> {
+            containerBarbearias.removeAllViews();
+
+            for (BarbeariaComDistancia b : lista) {
+                DocumentSnapshot doc = b.getDoc();
+
+                View v = getLayoutInflater().inflate(R.layout.card_barbearia, containerBarbearias, false);
+
+                ImageView imgBarbearia = v.findViewById(R.id.imgBarbearia);
+                TextView nomeBarbearia = v.findViewById(R.id.tvNomeBarbearia);
+                TextView tvEndereco = v.findViewById(R.id.tvEndereco);
+                TextView tvStatus = v.findViewById(R.id.tvStatus);
+                TextView tvDistancia = v.findViewById(R.id.tvDistancia);
+
+                Glide.with(this)
+                        .load(doc.getString("fotoUrl"))
+                        .circleCrop()
+                        .into(imgBarbearia);
+
+                nomeBarbearia.setText(doc.getString("nome"));
+                tvDistancia.setText(String.format("%.2f km", b.getDistanciaMetros() / 1000));
+
+                setStatus(doc.getId(), tvStatus);
+
+                dbBarbearia.getSubDocument("Barbearias", doc.getId(), "Enderecos", t -> {
+                    List<DocumentSnapshot> endDocs = t.getResult().getDocuments();
+                    if (!endDocs.isEmpty()) {
+                        DocumentSnapshot end = endDocs.get(0);
+                        tvEndereco.setText(end.getString("rua") + ", " + end.getString("numero"));
+                    }
+                });
+
+                containerBarbearias.addView(v);
+            }
+        });
+    }
 }

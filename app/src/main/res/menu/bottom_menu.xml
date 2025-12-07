@@ -5,12 +5,19 @@
         android:icon="@drawable/ic_home" />
 
     <item
+        android:id="@+id/nav_agedamentos"
+        android:title="Agendamentos"
+        android:icon="@drawable/ic_agenda" />
+
+    <item
         android:id="@+id/nav_profile"
         android:title="Perfil"
-        android:icon="@drawable/ic_person" />
+        android:icon="@drawable/ic_person"
+        />
 
     <item
         android:id="@+id/nav_settings"
         android:title="Configurações"
         android:icon="@drawable/ic_settings" />
+
 </menu>
