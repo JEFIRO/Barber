@@ -1,5 +1,7 @@
 package com.example.jefiro.barber.barbearia;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,7 @@ public class BarbeariaDetails extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirestoreRepository<Barbearia> db;
     private ImageView imgBarbearia;
+    private Double lat, lon;
     private TextView tvStatus, tv_Endereco, tvBarbeariaNome;
     private LinearLayout containerServicos, containerBarbeiro;
 
@@ -89,6 +92,10 @@ public class BarbeariaDetails extends AppCompatActivity {
                     var bairro = doc.getString("bairro");
                     var cidade = doc.getString("cidade");
                     var numero = doc.getString("numero");
+
+                    lat = doc.getDouble("lat");
+                    lon = doc.getDouble("log");
+
                     String endereco = rua + ", " + numero + " - " + bairro + ", " + cidade;
 
                     tv_Endereco.setText(endereco);
@@ -266,5 +273,13 @@ public class BarbeariaDetails extends AppCompatActivity {
         return resultado.toString().trim();
     }
 
+    public void openInGoogleMaps(View v) {
+        String label = "Barbearia";
+
+        Uri uri = Uri.parse("geo:" + lat + "," + lon + "?q=" + lat + "," + lon + "(" + label + ")");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage("com.google.android.apps.maps");
+        startActivity(intent);
+    }
 
 }

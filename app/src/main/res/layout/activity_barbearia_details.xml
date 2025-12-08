@@ -68,9 +68,11 @@
                     android:textStyle="bold" />
 
                 <Button
+                    android:id="@+id/tvOpenMaps"
                     style="@style/BarberButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="openInGoogleMaps"
                     android:text="Ver" />
             </LinearLayout>
         </LinearLayout>
