@@ -1,6 +1,7 @@
 package com.example.jefiro.barber.barbearia;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -16,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.example.jefiro.barber.R;
 import com.example.jefiro.barber.repository.FirestoreRepository;
 import com.example.jefiro.barber.repository.OnCallback;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,6 +44,10 @@ public class BarbeariaDetails extends AppCompatActivity {
             return insets;
         });
 
+        String idBarbearia = getIntent().getStringExtra("idBarbearia");
+        String status = getIntent().getStringExtra("status");
+        Log.d("Barbearia", idBarbearia);
+
         db = new FirestoreRepository<Barbearia>();
         mAuth = FirebaseAuth.getInstance();
 
@@ -56,13 +61,14 @@ public class BarbeariaDetails extends AppCompatActivity {
         containerServicos = findViewById(R.id.containerServicos);
         containerBarbeiro = findViewById(R.id.containerBarbeiro);
 
-        setBarbearia("lo", new OnCallback<DocumentSnapshot>() {
+        setBarbearia(idBarbearia, new OnCallback<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot result) {
                 Barbearia barbearia = result.toObject(Barbearia.class);
+
                 Glide.with(getApplicationContext())
                         .load(barbearia.getFotoUrl())
-                        .circleCrop()
+                        .centerCrop()
                         .into(imgBarbearia);
                 tvBarbeariaNome.setText(barbearia.getNome());
 
@@ -73,18 +79,20 @@ public class BarbeariaDetails extends AppCompatActivity {
 
             }
         });
-        getEndereco("", new OnCallback<QuerySnapshot>() {
+        getEndereco(idBarbearia, new OnCallback<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot result) {
-                var doc = result.getDocuments().get(0);
+                if (result.getDocuments().size() == 1) {
+                    var doc = result.getDocuments().get(0);
 
-                var rua = doc.getString("rua");
-                var bairro = doc.getString("bairro");
-                var cidade = doc.getString("cidade");
-                var numero = doc.getString("numero");
-                String endereco = rua + ", " + numero + " - " + bairro + ", " + cidade;
+                    var rua = doc.getString("rua");
+                    var bairro = doc.getString("bairro");
+                    var cidade = doc.getString("cidade");
+                    var numero = doc.getString("numero");
+                    String endereco = rua + ", " + numero + " - " + bairro + ", " + cidade;
 
-                tv_Endereco.setText(endereco);
+                    tv_Endereco.setText(endereco);
+                }
             }
 
             @Override
@@ -92,7 +100,7 @@ public class BarbeariaDetails extends AppCompatActivity {
 
             }
         });
-        getServicos("", new OnCallback<QuerySnapshot>() {
+        getServicos(idBarbearia, new OnCallback<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot result) {
                 if (!result.isEmpty()) {
@@ -111,12 +119,12 @@ public class BarbeariaDetails extends AppCompatActivity {
                         TextView cardPreco = v.findViewById(R.id.cardPreco);
                         TextView cardDuracao = v.findViewById(R.id.cardDuracao);
 
-                        if (nome.toLowerCase().contains("cabelo")) {
+                        if (nome.toLowerCase().contains("cabelo e barba")) {
+                            cardImage.setImageResource(R.drawable.ic_cabelo_barba);
+                        } else if (nome.toLowerCase().contains("cabelo")) {
                             cardImage.setImageResource(R.drawable.ic_hair_cut);
                         } else if (nome.toLowerCase().contains("barba")) {
                             cardImage.setImageResource(R.drawable.ic_barba);
-                        } else if (nome.toLowerCase().contains("cabelo e barba")) {
-                            cardImage.setImageResource(R.drawable.ic_cabelo_barba);
                         } else {
                             cardImage.setImageResource(R.drawable.ic_hair_cut);
                         }
@@ -137,14 +145,28 @@ public class BarbeariaDetails extends AppCompatActivity {
 
             }
         });
-        getBarbeiro("", new OnCallback<QuerySnapshot>() {
+        getBarbeiro(idBarbearia, new OnCallback<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot result) {
                 if (!result.isEmpty()) {
-                    containerServicos.removeAllViews();
+                    containerBarbeiro.removeAllViews();
                     result.getDocuments().forEach(doc -> {
-                        View v = getLayoutInflater().inflate(R.layout.item_servico, containerServicos, false);
+                        View v = getLayoutInflater().inflate(R.layout.item_barbeiro, containerBarbeiro, false);
 
+                        var imgBarbeiro = doc.getString("fotoBarbeiro");
+                        var nome = doc.getString("nome");
+
+                        ImageView cardImg = v.findViewById(R.id.cardImage);
+                        TextView cardTitle = v.findViewById(R.id.cardTitle);
+
+                        cardTitle.setText(nome);
+
+                        Glide.with(getApplicationContext())
+                                .load(imgBarbeiro)
+                                .circleCrop()
+                                .into(cardImg);
+
+                        containerBarbeiro.addView(v);
 
                     });
                 }
@@ -155,10 +177,20 @@ public class BarbeariaDetails extends AppCompatActivity {
 
             }
         });
+
+        if (!status.isEmpty() && status.toLowerCase().contains("aberto")) {
+            tvStatus.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.status_aberto));
+            tvStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.blackPremium));
+            tvStatus.setText("Aberto");
+        } else {
+            tvStatus.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.status_fechado));
+            tvStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.blackPremium));
+            tvStatus.setText("Fechado");
+        }
     }
 
     private void setBarbearia(String id, OnCallback<DocumentSnapshot> callback) {
-        db.getById("Barbearia", id, task -> {
+        db.getById("Barbearias", id, task -> {
             if (task.isSuccessful()) {
                 callback.onSuccess(task.getResult());
             } else {
@@ -169,7 +201,7 @@ public class BarbeariaDetails extends AppCompatActivity {
     }
 
     private void getEndereco(String id, OnCallback<QuerySnapshot> callback) {
-        db.getSubDocument("Barbearia", id, "Enderecos", task -> {
+        db.getSubDocument("Barbearias", id, "Enderecos", task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess(task.getResult());
                     } else {
@@ -181,7 +213,7 @@ public class BarbeariaDetails extends AppCompatActivity {
     }
 
     private void getServicos(String id, OnCallback<QuerySnapshot> callback) {
-        db.getSubDocument("Barbearia", id, "Servicos", task -> {
+        db.getSubDocument("Barbearias", id, "Servicos", task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess(task.getResult());
                     } else {
@@ -193,7 +225,7 @@ public class BarbeariaDetails extends AppCompatActivity {
     }
 
     private void getBarbeiro(String id, OnCallback<QuerySnapshot> callback) {
-        db.getSubDocument("Barbearia", id, "Barbeiro", task -> {
+        db.getSubDocument("Barbearias", id, "Barbeiros", task -> {
                     if (task.isSuccessful()) {
                         callback.onSuccess(task.getResult());
                     } else {

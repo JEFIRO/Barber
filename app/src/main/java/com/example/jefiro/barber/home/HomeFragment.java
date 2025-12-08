@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.jefiro.barber.R;
 import com.example.jefiro.barber.barbearia.Barbearia;
 import com.example.jefiro.barber.barbearia.BarbeariaComDistancia;
+import com.example.jefiro.barber.barbearia.BarbeariaDetails;
 import com.example.jefiro.barber.model.Cliente;
 import com.example.jefiro.barber.repository.FirestoreRepository;
 import com.example.jefiro.barber.service.OnDistanceCallback;
@@ -80,6 +81,7 @@ public class HomeFragment extends Fragment {
         getLastLocation();
         return view;
     }
+
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -123,6 +125,7 @@ public class HomeFragment extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
     private void setImgProfile() {
         String uid = mAuth.getUid();
         if (uid == null || uid.isEmpty()) return;
@@ -257,6 +260,15 @@ public class HomeFragment extends Fragment {
                 TextView tvEndereco = v.findViewById(R.id.tvEndereco);
                 TextView tvStatus = v.findViewById(R.id.tvStatus);
                 TextView tvDistancia = v.findViewById(R.id.tvDistancia);
+                LinearLayout tvDetails = v.findViewById(R.id.tvDetails);
+
+                tvDetails.setOnClickListener(l -> {
+                    Intent intent = new Intent(getContext(), BarbeariaDetails.class);
+                    intent.putExtra("idBarbearia", doc.getId());
+                    intent.putExtra("status", tvStatus.getText());
+                    startActivity(intent);
+                });
+
 
                 Glide.with(this)
                         .load(doc.getString("fotoUrl"))
