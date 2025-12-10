@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -74,6 +76,17 @@ public class AgendamentoViewFragment extends Fragment {
                         Button btnDetalhes = item.findViewById(R.id.btnDetalhes);
 
 
+
+                        if (!ag.getStatus()) {
+                            tvStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_aberto));
+                            tvStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
+                            tvStatus.setText("Confirmado");
+                        } else {
+                            tvStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.status_fechado));
+                            tvStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPremium));
+                            tvStatus.setText("Pendente");
+                        }
+
                         LocalDateTime data = LocalDateTime.ofInstant(ag.getData_agendada().toDate().toInstant(), ZoneId.systemDefault());
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy 'às' HH:mm", new Locale("pt", "BR"));
                         String dataFormatada = data.format(formatter);
@@ -97,13 +110,13 @@ public class AgendamentoViewFragment extends Fragment {
 
                         getServico(ag.getIdBarbearia(), ag.getIdServico(), s -> tvServico.setText(s.getNome()));
 
-                        getBarbeiro(ag.getIdBarbearia(), ag.getIdBarbeiro(), br ->{
+                        getBarbeiro(ag.getIdBarbearia(), ag.getIdBarbeiro(), br -> {
                             Log.d("DEBUG_SPINNER", "Barbeiro selecionado: " + ag.getIdBarbeiro());
                             Log.d("DEBUG_SPINNER", "Barbeiro selecionado: " + br);
                             tvBarbeiro.setText(br.getNome());
-                        } );
+                        });
 
-                        btnCancelar.setOnClickListener(x -> cancelarAgendamento(doc.getId()));
+                        btnCancelar.setOnClickListener(x -> cancelarAgendamento(doc.getId(), ag));
 
                         btnDetalhes.setOnClickListener(x -> {
                         });
@@ -113,10 +126,19 @@ public class AgendamentoViewFragment extends Fragment {
                 });
     }
 
-    private void cancelarAgendamento(String id) {
-        db.collection("Agendamentos").document(id)
-                .update("status", "Cancelado")
-                .addOnSuccessListener(x -> getAgendamentos());
+    private void cancelarAgendamento(String id, Agendamento ag) {
+        LocalDateTime data = LocalDateTime.ofInstant(ag.getData_agendada().toDate().toInstant(), ZoneId.systemDefault());
+
+        data.minusMinutes(30);
+        LocalDateTime agora = LocalDateTime.now();
+
+        if (agora.isBefore(data)) {
+            db.collection("Agendamentos").document(id)
+                    .update("confirmado", false)
+                    .addOnSuccessListener(x -> getAgendamentos());
+        } else {
+            Toast.makeText(getContext(), "Invalido", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getBarbearia(String id, OnResult<Barbearia> callback) {
