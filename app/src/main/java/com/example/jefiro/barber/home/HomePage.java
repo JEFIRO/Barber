@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.jefiro.barber.R;
+import com.example.jefiro.barber.agendamento.AgendamentoViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomePage extends AppCompatActivity {
@@ -40,6 +41,9 @@ public class HomePage extends AppCompatActivity {
             }
             if ( R.id.nav_profile == item.getItemId()){
                 selectedFragment = new ProfileFragment();
+            }
+            if ( R.id.nav_agedamentos == item.getItemId()){
+                selectedFragment = new AgendamentoViewFragment();
             }
 
             if (selectedFragment != null) {

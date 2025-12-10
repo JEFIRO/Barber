@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.jefiro.barber.R;
+import com.example.jefiro.barber.agendamento.AgendamentosPage;
 import com.example.jefiro.barber.repository.FirestoreRepository;
 import com.example.jefiro.barber.repository.OnCallback;
 import com.google.firebase.auth.FirebaseAuth;
@@ -125,6 +127,13 @@ public class BarbeariaDetails extends AppCompatActivity {
                         TextView cardTitle = v.findViewById(R.id.cardTitle);
                         TextView cardPreco = v.findViewById(R.id.cardPreco);
                         TextView cardDuracao = v.findViewById(R.id.cardDuracao);
+
+                        v.findViewById(R.id.btnAgendar).setOnClickListener(l -> {
+                            Intent intent = new Intent(getApplicationContext(), AgendamentosPage.class);
+                            intent.putExtra("idServico", doc.getId());
+                            intent.putExtra("idBarbearia", idBarbearia);
+                            startActivity(intent);
+                        });
 
                         if (nome.toLowerCase().contains("cabelo e barba")) {
                             cardImage.setImageResource(R.drawable.ic_cabelo_barba);
@@ -242,7 +251,7 @@ public class BarbeariaDetails extends AppCompatActivity {
         );
     }
 
-    private String formatarDuracao(String duracao) {
+    public static String formatarDuracao(String duracao) {
         String[] partes = duracao.split(":");
         int horas = Integer.parseInt(partes[0]);
         int minutos = Integer.parseInt(partes[1]);
@@ -255,7 +264,7 @@ public class BarbeariaDetails extends AppCompatActivity {
             return minutos + "min";
     }
 
-    public String capitalizarTitulo(String texto) {
+    public static String capitalizarTitulo(String texto) {
         if (texto == null || texto.trim().isEmpty()) return "";
 
         List<String> ignorar = Arrays.asList("de", "da", "do", "das", "dos", "em", "para", "por", "e", "a", "o", "com");

@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Barbershop">
         <activity
+            android:name=".agendamento.AgendamentosPage"
+            android:exported="false" />
+        <activity
             android:name=".barbearia.BarbeariaDetails"
             android:exported="false" />
         <activity

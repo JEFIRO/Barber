@@ -156,7 +156,7 @@ public class CadastroCliente extends AppCompatActivity {
             makeToast("Preencha todos os campos");
         }
 
-        if (senha.equals(senhaConfirma)) {
+        if (!senha.equals(senhaConfirma)) {
             makeToast("As senhas não conferem");
         }
 

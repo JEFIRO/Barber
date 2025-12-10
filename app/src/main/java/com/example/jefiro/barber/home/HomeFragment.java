@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment {
                 usuarioLon = location.getLongitude();
                 Log.d("MAPS", "Lat: " + usuarioLat + " Lon: " + usuarioLon);
 
-                carregarBarbearias(usuarioLat, usuarioLon, null); // Carrega todas as barbearias
+                carregarBarbearias(usuarioLat, usuarioLon, null);
             }
         });
     }
@@ -195,14 +195,12 @@ public class HomeFragment extends Fragment {
             CountDownLatch latch = new CountDownLatch(docs.size());
 
             for (DocumentSnapshot doc : docs) {
-                if (pesquisaNome != null && !pesquisaNome.isEmpty() &&
-                        !doc.getString("nome").toLowerCase().contains(pesquisaNome.toLowerCase())) {
-                    latch.countDown();
-                    continue;
-                }
+                Log.d("DEBUG_BARBEARIA", "🟡 BARBEARIA LIDA DO FIREBASE → " + doc.getString("nome"));
 
                 dbBarbearia.getSubDocument("Barbearias", doc.getId(), "Enderecos", task1 -> {
+
                     if (!task1.isSuccessful() || task1.getResult().isEmpty()) {
+                        Log.e("DEBUG_BARBEARIA", "❌ SEM ENDEREÇO - NÃO ENTRA NA LISTA → " + doc.getString("nome"));
                         latch.countDown();
                         return;
                     }
@@ -213,6 +211,7 @@ public class HomeFragment extends Fragment {
                     Double lon = enderecoDoc.getDouble("log");
 
                     if (lat == null || lon == null) {
+                        Log.e("DEBUG_BARBEARIA", "❌ LAT/LON NULA - DESCARTADA → " + doc.getString("nome"));
                         latch.countDown();
                         return;
                     }
@@ -220,17 +219,20 @@ public class HomeFragment extends Fragment {
                     distance(usuarioLat, usuarioLon, lat, lon, new OnDistanceCallback() {
                         @Override
                         public void onSucefull(double distanceKm) {
+                            Log.d("DEBUG_BARBEARIA", "🟢 ADICIONADA NA LISTA → " + doc.getString("nome") + " | " + distanceKm + "km");
                             lista.add(new BarbeariaComDistancia(doc, distanceKm));
                             latch.countDown();
                         }
 
                         @Override
                         public void onError(String error) {
+                            Log.e("DEBUG_BARBEARIA", "⚠ ERRO DISTÂNCIA: " + doc.getString("nome") + " | " + error);
                             latch.countDown();
                         }
                     });
                 });
             }
+
 
             new Thread(() -> {
                 try {

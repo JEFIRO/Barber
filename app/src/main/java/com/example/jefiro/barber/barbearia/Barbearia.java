@@ -89,4 +89,17 @@ public class Barbearia {
     public void setAtualizadoEm(Timestamp atualizadoEm) {
         this.atualizadoEm = atualizadoEm;
     }
+
+    @Override
+    public String toString() {
+        return "Barbearia{" +
+                "id='" + id + '\'' +
+                ", nome='" + nome + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", email='" + email + '\'' +
+                ", fotoUrl='" + fotoUrl + '\'' +
+                ", criadoEm=" + criadoEm +
+                ", atualizadoEm=" + atualizadoEm +
+                '}';
+    }
 }
