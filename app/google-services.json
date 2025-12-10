@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "738440643488",
+    "project_id": "barber-40482",
+    "storage_bucket": "barber-40482.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738440643488:android:59b64bcd9d640188cb1ac5",
+        "android_client_info": {
+          "package_name": "com.example.jefiro.barber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOMkIUkssCqSB-_N1KEyv0uEzCrCF_Af8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
