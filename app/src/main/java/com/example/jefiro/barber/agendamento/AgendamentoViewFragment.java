@@ -145,7 +145,7 @@ public class AgendamentoViewFragment extends Fragment {
     private void getEndereco(String id, OnResult<Endereco> callback) {
         db.collection("Barbearias")
                 .document(id)
-                .collection("Endereco")
+                .collection("Enderecos")
                 .get()
                 .addOnSuccessListener(d -> callback.ok(d.getDocuments().get(0).toObject(Endereco.class)));
     }
